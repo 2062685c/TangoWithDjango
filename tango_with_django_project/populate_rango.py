@@ -50,7 +50,7 @@ def populate():
 
     add_page(cat=me_cat,
         title="GitHub",
-        url="https://github.com/2062685c")
+        url="https://github.com/2062685c", views=49)
 
     add_page(cat=me_cat,
         title="PythonAnywhere",

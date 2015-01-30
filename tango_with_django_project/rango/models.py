@@ -8,11 +8,11 @@ class Category(models.Model):
         slug = models.SlugField(unique=True)
 
         def save(self, *args, **kwargs):
-                self.slug = slugify(self.name)
-                super(Category, self).save(*args, **kwargs)
+            self.slug = slugify(self.name)
+            super(Category, self).save(*args, **kwargs)
 
         def __unicode__(self):
-                return self.name
+            return self.name
 
 class Page(models.Model):
     category = models.ForeignKey(Category)
