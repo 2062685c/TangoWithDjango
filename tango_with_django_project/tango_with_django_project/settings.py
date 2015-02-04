@@ -59,7 +59,7 @@ WSGI_APPLICATION = 'tango_with_django_project.wsgi.application'
 
 
 # Database
-# https://docs.djangoproject.com/en/1.7/ref/settings/#databases
+# https://docs.djangoproject.com/en/1.7/ref/settings/
 
 DATABASES = {
     'default': {
@@ -67,6 +67,14 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+
+# Password hashing
+PASSWORD_HASHERS = (
+'django.contrib.auth.hashers.PBKDF2PasswordHasher',
+'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
+)
+
+LOGIN_URL = '/rango/login/'
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
