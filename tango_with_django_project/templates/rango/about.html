@@ -1,18 +1,17 @@
 <!DOCTYPE html>
 
+{% extends 'rango/base.html' %}
+
 {% load staticfiles %}
 
-<html>
+{% block title %}About{% endblock %}
 
-    <head>
-        <title>Rango</title>
-    </head>
+{% block body_block %}
+    <h1>About Page</h1>
+    
+    This is the about page, put together by Jack Croal, 2062685.
+	<img src="{% static 'images/me.jpg' %}" HEIGHT="600" WIDTH="800" alt="Picture of Me" />
+    
+{% endblock %}
 
-    <body>
-        <h1>Rango says...</h1>
-		This is the about page, put together by Jack Croal, 2062685. <br />
-        <a href="/rango/">Index</a> <br />
-		<img src="{% static 'images/me.jpg' %}" HEIGHT="600" WIDTH="800" alt="Picture of Me" />
-    </body>
-
-</html>
+{% load staticfiles %}

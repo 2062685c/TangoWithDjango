@@ -11,22 +11,15 @@ def category(request, category_name_slug):
     context_dict = {}
 
     try:
-        # Can we find a category name slug with the given name?
-        # If we can't, the .get() method raises a DoesNotExist exception.
-        # So the .get() method returns one model instance or raises an exception.
         category = Category.objects.get(slug=category_name_slug)
         context_dict['category_name'] = category.name
 
-        # Retrieve all of the associated pages.
-        # Note that filter returns >= 1 model instance.
         pages = Page.objects.filter(category=category)
 
-        # Adds our results list to the template context under name pages.
         context_dict['pages'] = pages
-        # We also add the category object from the database to the context dictionary.
-        # We'll use this in the template to verify that the category exists.
+
         context_dict['category'] = category
-		# We must now add the category_name_slug into the context_dict
+
         context_dict['category_name_slug'] = category_name_slug
     except Category.DoesNotExist:
         # We get here if we didn't find the specified category.
@@ -81,7 +74,8 @@ def add_page(request, category_name_slug):
     else:
         form = PageForm()
 
-    context_dict = {'form':form, 'category':cat, 'category_name_slug':category_name_slug}
+    context_dict = {'form':form, 'category':cat, 'category_name_slug': category_name_slug}
+    context_dict['category_name'] = Category.objects.get(slug=category_name_slug).name
 
     return render(request, 'rango/add_page.html', context_dict)
 
@@ -198,7 +192,7 @@ def user_login(request):
         
 @login_required
 def restricted(request):
-    return HttpResponse("Since you're logged in, you can see this text!")
+	return render(request, 'rango/restricted.html')
 
 @login_required
 def user_logout(request):
