@@ -1,5 +1,3 @@
-<!DOCTYPE html>
-
 {% extends 'rango/base.html' %}
 
 {% load staticfiles %}
@@ -7,11 +5,12 @@
 {% block title %}About{% endblock %}
 
 {% block body_block %}
-    <h1>About Page</h1>
+    <div class="page-header">
+        <h1 class="form-signin-heading">About Page</h1>
+    </div>
     
-    This is the about page, put together by Jack Croal, 2062685.
-    <br />
-    <b>You have viewed this site {{ visits }} times!</b>
+    This is the about page, put together by <b>Jack Croal, 2062685.</b><br />
+    You have viewed this site on <b>{{ visits }} occassion(s)!</b><br />
 	<img src="{% static 'images/me.jpg' %}" HEIGHT="600" WIDTH="800" alt="Picture of Me" />
     
 {% endblock %}
