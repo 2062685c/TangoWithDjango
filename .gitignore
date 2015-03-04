@@ -2,6 +2,9 @@
 __pycache__/
 *.py[cod]
 
+# Keys
+keys.py
+
 # C extensions
 *.so
 
