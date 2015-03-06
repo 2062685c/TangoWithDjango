@@ -1,10 +1,22 @@
 {% extends 'rango/base.html' %}
 
+{% load staticfiles %}
+
 {% block title %}Restricted{% endblock %}
 
 {% block body_block %}
+    <style>
+    img {
+    float:left;
+    margin: 30px;
+    }
+    </style>
+    
     <div class="page-header">
-        Since you're logged in, you can see this text
+        Since you're logged in, you can see this text!
     </div>
+    
+    And this sneaky photo of a certain monarch...<br />
+	<img src="{% static 'images/nick.jpg' %}" HEIGHT="100" WIDTH="100" alt="Picture of Nick" />
     
 {% endblock %}

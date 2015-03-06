@@ -1,34 +1,39 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
-from rango.models import Category, Page
+from rango.models import Category, Page, UserProfile
 from rango.forms import CategoryForm, PageForm, UserForm, UserProfileForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from datetime import datetime
 from rango.bing_search import run_query
 
 def category(request, category_name_slug):
-
-    # Create a context dictionary which we can pass to the template rendering engine.
     context_dict = {}
+    context_dict['result_list'] = None
+    context_dict['query'] = None
+    if request.method == 'POST':
+        query = request.POST['query'].strip()
+
+        if query:
+            # Run our Bing function to get the results list!
+            result_list = run_query(query)
+
+            context_dict['result_list'] = result_list
+            context_dict['query'] = query
 
     try:
         category = Category.objects.get(slug=category_name_slug)
         context_dict['category_name'] = category.name
-
-        pages = Page.objects.filter(category=category)
-
+        pages = Page.objects.filter(category=category).order_by('-views')
         context_dict['pages'] = pages
-
         context_dict['category'] = category
-
-        context_dict['category_name_slug'] = category_name_slug
     except Category.DoesNotExist:
-        # We get here if we didn't find the specified category.
-        # Don't do anything - the template displays the "no category" message for us.
         pass
 
-    # Go render the response and return it to the client.
+    if not context_dict['query']:
+        context_dict['query'] = category.name
+
     return render(request, 'rango/category.html', context_dict)
 	
 @login_required
@@ -129,7 +134,6 @@ def restricted(request):
 	return render(request, 'rango/restricted.html')
     
 def search(request):
-
     result_list = []
 
     if request.method == 'POST':
@@ -140,3 +144,81 @@ def search(request):
             result_list = run_query(query)
 
     return render(request, 'rango/search.html', {'result_list': result_list})
+
+def track_url(request):
+    page_id = None
+    url = '/rango/'
+    if request.method == 'GET':
+        if 'page_id' in request.GET:
+            page_id = request.GET['page_id']
+            try:
+                page = Page.objects.get(id=page_id)
+                page.views = page.views + 1
+                page.save()
+                url = page.url
+            except:
+                pass
+
+    return redirect(url)
+
+@login_required
+def register_profile(request):
+    registered_profile = False
+    context_dict = {}
+    
+    if request.method == 'POST':
+	
+        try:
+            profile = UserProfile.objects.get(user=request.user)
+            profile_form = UserProfileForm(request.POST, instance=profile)
+        except:
+            profile_form = UserProfileForm(request.POST)
+
+        if profile_form.is_valid():
+            profile = profile_form.save(commit=False)
+            profile.user = request.user
+            if 'picture' in request.FILES:
+                profile.picture = request.FILES['picture']  
+            profile.save()
+            registered_profile = True
+        else:
+            print profile_form.errors
+    else:
+        profile_form = UserProfileForm()
+    
+    context_dict['registered_profile'] = registered_profile
+    context_dict['profile_form'] = profile_form
+    
+    return render(request, 'registration/profile_registration.html', context_dict)
+
+@login_required
+def profile(request):
+    context_dict = {}
+    user = request.user
+    context_dict['user'] = user
+    try:
+        user_profile = UserProfile.objects.get(user=user)
+        context_dict['user_profile'] = user_profile
+    except:
+        pass
+    
+    return render(request, 'rango/profile.html', context_dict)
+
+def other_user_profile(request, user_name):
+    context_dict = {}
+    other_user = User.objects.get(username=user_name)
+        
+    try:
+        user_profile = UserProfile.objects.get(user=other_user)
+        context_dict['user_profile'] = user_profile
+    except:
+        pass
+    
+    context_dict['user_name'] = user_name
+    context_dict['other_user'] = other_user
+    return render(request, 'rango/other_user_profile.html', context_dict)
+    
+def all_users(request):
+    all_users = User.objects.order_by('-username')
+    context_dict = {'all_users':all_users}
+    return render(request, 'rango/all_users.html', context_dict)
