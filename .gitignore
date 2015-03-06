@@ -3,7 +3,7 @@ __pycache__/
 *.py[cod]
 
 # Keys
-keys.py
+
 
 # Database
 *.sqlite3
