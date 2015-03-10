@@ -15,25 +15,22 @@
     </style>
     
     <li class="list-group-item">
-        {% if user.picture %}
-            <img src="{{ user.picture.url }}" HEIGHT="200" WIDTH="250"/>
+        {% if user_profile.picture %}
+            <img src="{{ user_profile.picture.url }}" HEIGHT="200" WIDTH="250"/>
         {% endif %}
-
+    
         <h2> {{ user.username }} </h2>
     
-        <b> Email Address: </b>
-        {% if user.email %}
-            <a href="{{user.email }}">{{user.email}}</a>
+        <b> Website: </b>
+        {% if user_profile %}
+            <a href="{{user_profile.website }}">{{user_profile.website}}</a>
         {% else %}
             N/A
         {% endif %}
-		
-		<b> About Me: </b>
-        {% if user.about %}
-            <a href="{{user.about }}">{{user.about}}</a>
-        {% else %}
-            Update your info!
-        {% endif %}
+        <br />
+    
+        <b> Email Address: </b>
+        {{ user.email }}
         
         <br /><br /><br /><br /><br /><br /><br />
     
